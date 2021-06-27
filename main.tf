@@ -18,6 +18,14 @@ variable "subnet_prefix" {
   type = 
 
 }
+# # 1. Create vpc
+
+# resource "aws_vpc" "prod-vpc" {
+#   cidr_block = "10.0.0.0/16"
+#   tags = {
+#     Name = "production"
+#   }
+# }
 
 resource "aws_vpc" "prod-vpc" {
   cidr_block = "10.0.0.0/16"
@@ -26,11 +34,34 @@ resource "aws_vpc" "prod-vpc" {
   }
 }
 
+# # 2. Create Internet Gateway
+
+# resource "aws_internet_gateway" "gw" {
+#   vpc_id = aws_vpc.prod-vpc.id
+
 resource "aws_internet_gateway" "gw" {
   vpc_id = "${aws_vpc.prod-vpc.id}"
 }
 
-# 3. Create Custom Route Table
+# # 3. Create Custom Route Table
+
+# resource "aws_route_table" "prod-route-table" {
+#   vpc_id = aws_vpc.prod-vpc.id
+
+#   route {
+#     cidr_block = "0.0.0.0/0"
+#     gateway_id = aws_internet_gateway.gw.id
+#   }
+
+#   route {
+#     ipv6_cidr_block = "::/0"
+#     gateway_id      = aws_internet_gateway.gw.id
+#   }
+
+#   tags = {
+#     Name = "Prod"
+#   }
+# }
 
 resource "aws_route_table" "prod-route-table" {
   vpc_id = "${aws_vpc.prod-vpc.id}"
@@ -168,6 +199,8 @@ output "server_private_ip" {
 
 
 
+### Examples#####
+
 
 # resource "aws_instance" "my_first_server" {
 #   ami           = "ami-09e67e426f25ce0d7"
@@ -220,41 +253,6 @@ output "server_private_ip" {
 
 
 
-# # 1. Create vpc
-
-# resource "aws_vpc" "prod-vpc" {
-#   cidr_block = "10.0.0.0/16"
-#   tags = {
-#     Name = "production"
-#   }
-# }
-
-# # 2. Create Internet Gateway
-
-# resource "aws_internet_gateway" "gw" {
-#   vpc_id = aws_vpc.prod-vpc.id
-
-
-# }
-# # 3. Create Custom Route Table
-
-# resource "aws_route_table" "prod-route-table" {
-#   vpc_id = aws_vpc.prod-vpc.id
-
-#   route {
-#     cidr_block = "0.0.0.0/0"
-#     gateway_id = aws_internet_gateway.gw.id
-#   }
-
-#   route {
-#     ipv6_cidr_block = "::/0"
-#     gateway_id      = aws_internet_gateway.gw.id
-#   }
-
-#   tags = {
-#     Name = "Prod"
-#   }
-# }
 
 # # 4. Create a Subnet 
 
